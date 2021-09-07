@@ -1,24 +1,8 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app flat color="white">
       <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+        <v-app-bar-title>Meteo Sky</v-app-bar-title>
       </div>
 
       <v-spacer></v-spacer>
@@ -29,16 +13,13 @@
         text
       >
         <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
     <v-main>
       <search />
-      <!-- <HelloWorld/> -->
-      <v-row justify="center" v-for="(city, index) in datas" :key="index">
+      <v-row justify="center" v-for="(city, index) in $store.state.cities" :key="index">
         <weather-card
           :city="city"
-          @close="city.show = !city.show"
         ></weather-card>
       </v-row>
     </v-main>
@@ -48,7 +29,7 @@
 <script>
 import Search from "./components/Search";
 import WeatherCard from "./components/WeatherCard.vue";
-import axios from "axios";
+// import axios from "axios";
 export default {
   name: "App",
 
@@ -60,29 +41,5 @@ export default {
   data: () => ({
     datas: [],
   }),
-  mounted() {
-    var moment = require("moment");
-    const self = this;
-    this.$store.state.cities.forEach((city) => {
-      let url = `http://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lng}&appid=da5847ad1ce1cf01c604e53c5d560bf7&lang=fr&units=metric`;
-      axios
-        .get(url)
-        .then((response) => {
-          console.log(response.data);
-          let timezoneInMinutes = response.data.dt / 60;
-          response.data.show = false;
-          response.data.time = moment()
-            .utc(timezoneInMinutes)
-            .locale("fr")
-            .format("HH:mm");
-          if (response.data.weather[0].main == "Clear")
-            response.data.icon = "$vuetify.icons.sun";
-          self.datas.push(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    });
-  },
 };
 </script>
