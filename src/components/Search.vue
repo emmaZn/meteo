@@ -18,7 +18,13 @@
       /></v-col>
     </v-row>
     <v-row justify="center">
-      <weather-card v-if="find" :search="true" :city="city"></weather-card>
+      <weather-card
+        v-if="find"
+        :search="true"
+        :city="city"
+        :key="city.name"
+        @fav="find = !find"
+      ></weather-card>
     </v-row>
   </div>
 </template>
@@ -67,8 +73,8 @@ export default {
       this.geocoder = new window.google.maps.Geocoder();
     },
     display() {
+      this.find = false;
       const self = this;
-      this.city.name = this.selected.structured_formatting.main_text;
       this.city.show = true;
       this.geocoder.geocode(
         { placeId: self.selected.place_id },
@@ -86,6 +92,7 @@ export default {
           }
         }
       );
+      this.city.name = this.selected.structured_formatting.main_text;
     },
     displaySuggestions(predictions, status) {
       if (status !== window.google.maps.places.PlacesServiceStatus.OK) {

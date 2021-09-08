@@ -1,5 +1,11 @@
 <template>
-  <v-card width="75%" dark class="ma-5">
+  <v-card
+    :width="$vuetify.breakpoint.smAndDown ? '90%' : '75%'"
+    dark
+    class="ma-5"
+    loader-height="2px"
+    :loading="loading"
+  >
     <v-img
       :gradient="color()"
       src="https://via.placeholder.com/468x60"
@@ -16,12 +22,12 @@
             }}</v-icon></v-btn
           >
         </v-card-title>
-        <v-row align="end">
-          <v-col cols="2"
+        <v-row>
+          <v-col cols="6" sm="3" md="2"
             ><v-icon size="80" class="ml-16">{{ icon }}</v-icon></v-col
           >
-          <v-col cols="2"
-            ><h1>{{ Math.round(temp) }} °C</h1></v-col
+          <v-col cols="6" sm="3" md="3"
+            ><h1 class="temp">{{ Math.round(temp) }} °C</h1></v-col
           >
           <v-col>
             <p class="ma-0">
@@ -35,7 +41,7 @@
       </v-container>
       <v-row class="mb-10">
         <v-slider
-          class="px-16"
+          :class="$vuetify.breakpoint.smAndDown ? 'px-3' : 'px-16'"
           v-model="slider"
           step="1"
           min="0"
@@ -47,7 +53,7 @@
         ></v-slider>
       </v-row>
       <v-row v-if="show" class="mb-10 mx-5">
-        <v-col v-for="(day, i) in days" :key="i">
+        <v-col v-for="(day, i) in days" :key="i" cols="6" sm="4" md="2">
           <v-card height="200px" color="rgb(255, 0, 0, 0.2)">
             <v-row justify="center">
               <v-card-title> {{ day.name }} </v-card-title></v-row
@@ -106,27 +112,34 @@ export default {
     show: false,
     time: null,
     icon: "",
-    componentKey: 0,
     dialog: false,
     temp: 0,
     favorite: true,
     feels_like: 0,
     wind_speed: 0,
+    loading: false,
     humidity: 0,
     slider: 0,
     weather: {},
     ticksLabels: [],
     hours: [],
+    newFavs: [],
     days: [],
   }),
+  beforeDestroy() {},
   mounted() {
+    this.loading=true
     var moment = require("moment");
     const self = this;
     if (this.search) {
       this.show = true;
-      this.favorite = false;
     }
-    let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${this.city.lat}&lon=${this.city.lng}&exclude=minutely&appid=da5847ad1ce1cf01c604e53c5d560bf7&lang=fr&units=metric`;
+    if (
+      this.$store.state.cities.find((element) => element.name == this.city.name)
+    )
+      this.favorite == true;
+    else this.favorite = false;
+    let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${this.city.lat}&lon=${this.city.lng}&exclude=minutely&appid=13816f364d3fb3d54c6fb76f657e0e31&lang=fr&units=metric`;
     axios
       .get(url)
       .then((response) => {
@@ -169,10 +182,19 @@ export default {
             self.icon = "$vuetify.icons.cloud";
             break;
           case "Mist":
-            self.icon = "$vuetify.icons.mist";
+            self.icon = "$vuetify.icons.haze";
             break;
           case "Rain":
             self.icon = "$vuetify.icons.rain";
+            break;
+          case "Haze":
+            self.icon = "$vuetify.icons.haze";
+            break;
+          case "Fog":
+            self.icon = "$vuetify.icons.haze";
+            break;
+          case "Thunderstorm":
+            self.icon = "$vuetify.icons.thunder";
             break;
           default:
             self.icon = "$vuetify.icons.sun";
@@ -183,6 +205,7 @@ export default {
         self.humidity = response.data.current.humidity;
         self.feels_like = response.data.current.feels_like;
         self.wind_speed = response.data.current.wind_speed;
+        this.loading = false;
       })
       .catch((error) => {
         console.log(error);
@@ -193,15 +216,23 @@ export default {
     color() {
       switch (this.weather.main) {
         case "Clear":
-          return "to bottom right, #FFF500, #00FFE0";
+          return "114.15deg, #E8677E, #EAA640";
         case "Clouds":
-          return "to bottom right, #669AFF, #00FFE0";
+          return "114.15deg, #3CDDD3, #2C59B0";
         case "Mist":
-          return "to bottom right, #D7729D, #00FFE0";
+          return "114.15deg, #E8677E, #2C59B0";
         case "Rain":
-          return "to bottom right, #D7729D, #00FFE0";
+          return "114.15deg, #E8677E, #2C59B0";
+        case "Haze":
+          return "114.15deg, #E8677E, #2C59B0";
+        case "Fog":
+          return "114.15deg, #E8677E, #2C59B0";
+        case "Thunderstorm":
+          return "114.15deg, #E8677E, #2C59B0";
+        case "Snow":
+          return "114.15deg, #3DC8B7, #E6F8B3";
         default:
-          return "to bottom right, #669AFF, #00FFE0";
+          return "114.15deg, #669AFF, #E8677E";
       }
     },
     get5days() {
@@ -209,12 +240,15 @@ export default {
     },
     fav() {
       if (this.favorite) this.dialog = true;
-      else
+      else {
         this.$store.commit("addCity", {
           name: this.city.name,
           lat: this.city.lat,
           lng: this.city.lng,
         });
+        this.favorite = true;
+      }
+      this.$emit("fav");
     },
     delfav() {
       this.favorite = false;
@@ -233,11 +267,18 @@ export default {
           this.icon = "$vuetify.icons.cloud";
           break;
         case "Mist":
-          this.icon = "$vuetify.icons.mist";
+          this.icon = "$vuetify.icons.haze";
           break;
         case "Rain":
           this.icon = "$vuetify.icons.rain";
           break;
+        case "Haze":
+          this.icon = "$vuetify.icons.haze";
+          break;
+        case "Thunderstorm":
+          this.icon = "$vuetify.icons.thunder";
+          break;
+
         default:
           this.icon = "$vuetify.icons.sun";
           break;
@@ -255,5 +296,8 @@ export default {
 <style>
 .cont {
   max-width: 100% !important;
+}
+.temp {
+  font-size: 3em;
 }
 </style>

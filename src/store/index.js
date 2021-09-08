@@ -10,11 +10,12 @@ export default new Vuex.Store({
             name: "Paris",
             lat: 48.856614,
             lng: 2.3522219
-        }]
+        }],
+        dark:false
     },
     mutations: {
         addCity(state, city) {
-            state.cities.push(city)
+            if (!state.cities.find((element) => element.name == city.name)) state.cities.unshift(city)
         },
         delCity(state, cityName) {
             console.log(cityName)
@@ -23,6 +24,9 @@ export default new Vuex.Store({
                 return el.name != cityName;
             })
         },
+        switchMode(state){
+            state.dark = !state.dark
+        }
     },
     actions: {
     },

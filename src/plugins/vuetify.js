@@ -6,6 +6,9 @@ import sun from '@/components/icons/sun.vue'
 import cloud from '@/components/icons/cloud.vue'
 import mist from '@/components/icons/mist.vue'
 import rain from '@/components/icons/rain.vue'
+import haze from '@/components/icons/haze.vue'
+import water from '@/components/icons/water.vue'
+import thunder from '@/components/icons/thunder.vue'
 export default new Vuetify({
   icons: {
     values: {
@@ -21,6 +24,29 @@ export default new Vuetify({
       rain: {
         component: rain,
       },
+      haze: {
+        component: haze,
+      },
+      thunder: {
+        component: thunder,
+      },
+      water: {
+        component: water,
+      },
     },
+  },
+  theme: {
+    options: {
+      customProperties: true,
+    },
+    themes: {
+      light: {
+      },
+      dark: {
+        primary: '#25262F',
+        background: '#25262F'
+      }
+    },
+
   }
 });
