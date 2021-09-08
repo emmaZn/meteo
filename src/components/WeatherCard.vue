@@ -248,7 +248,6 @@ export default {
         });
         this.favorite = true;
       }
-      this.$emit("fav");
     },
     delfav() {
       this.favorite = false;
