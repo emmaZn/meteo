@@ -3,6 +3,13 @@
     <v-app-bar app flat :color="$vuetify.theme.dark ? '#25262f' : 'white'">
       <v-icon x-large>$vuetify.icons.water</v-icon>
       <span class="text-no-wrap ml-5 title"> METEO SKY</span>
+
+      <div>
+        <v-btn>A propos</v-btn>
+        <v-btn>Rechercher</v-btn>
+        <v-btn>Favoris</v-btn>
+
+      </div>
       <v-spacer></v-spacer>
 
       <v-tooltip v-if="!$vuetify.theme.dark" bottom>
@@ -39,29 +46,17 @@
       </v-tooltip>
     </v-app-bar>
     <v-main>
-      <search />
-      <v-row
-        justify="center"
-        v-for="city in $store.state.cities"
-        :key="city.name"
-      >
-        <weather-card :city="city"></weather-card>
-      </v-row>
+       <router-view></router-view>
     </v-main>
+   
   </v-app>
 </template>
 
 <script>
-import Search from "./components/Search";
-import WeatherCard from "./components/WeatherCard.vue";
 // import axios from "axios";
 export default {
   name: "App",
 
-  components: {
-    Search,
-    WeatherCard,
-  },
   mounted() {
     if (this.$store.state.dark) {
       console.log("dark");
