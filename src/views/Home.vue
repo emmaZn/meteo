@@ -1,6 +1,5 @@
 <template>
   <div>
-    <search />
     <v-row
       justify="center"
       v-for="city in $store.state.cities"
@@ -12,17 +11,10 @@
 </template>
 
 <script>
-import Search from "./components/Search";
-import WeatherCard from "./components/WeatherCard.vue";
-// import axios from "axios";
+import WeatherCard from '../components/WeatherCard.vue'
 export default {
-  name: "Home",
-
-  components: {
-    Search,
-    WeatherCard,
-  },
-};
+  components: { WeatherCard },
+}
 </script>
 
 <style>

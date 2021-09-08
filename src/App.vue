@@ -1,17 +1,36 @@
 <template>
   <v-app>
     <v-app-bar app flat :color="$vuetify.theme.dark ? '#25262f' : 'white'">
-      <v-icon x-large>$vuetify.icons.water</v-icon>
-      <span class="text-no-wrap ml-5 title"> METEO SKY</span>
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn color="primary" icon dark v-bind="attrs" v-on="on"
+            ><v-icon> mdi-menu</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item>
+            <router-link to="/" class="router">
+              <v-list-item-title>Favoris</v-list-item-title></router-link
+            >
+          </v-list-item>
+          <v-list-item>
+            <router-link to="/Search" class="router">
+              <v-list-item-title>Rechercher</v-list-item-title></router-link
+            >
+          </v-list-item>
+          <v-list-item>
+            <router-link to="/FAQ" class="router">
+              <v-list-item-title>FAQ</v-list-item-title></router-link
+            >
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <router-link to="/" class="router"
+        ><v-icon x-large>$vuetify.icons.water</v-icon>
+        <span class="text-no-wrap ml-5 title"> METEO SKY</span></router-link
+      >
 
-      <div>
-        <v-btn>A propos</v-btn>
-        <v-btn>Rechercher</v-btn>
-        <v-btn>Favoris</v-btn>
-
-      </div>
-      <v-spacer></v-spacer>
-
+      <v-spacer />
       <v-tooltip v-if="!$vuetify.theme.dark" bottom>
         <template v-slot:activator="{ on }">
           <v-btn
@@ -46,9 +65,8 @@
       </v-tooltip>
     </v-app-bar>
     <v-main>
-       <router-view></router-view>
+      <router-view></router-view>
     </v-main>
-   
   </v-app>
 </template>
 
@@ -83,6 +101,11 @@ export default {
 }
 .title {
   font-size: 50px;
+  color: #2a9e96;
+  text-decoration: none !important;
+}
+.router {
+  text-decoration: none !important;
   color: #2a9e96;
 }
 </style>

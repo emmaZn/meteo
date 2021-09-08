@@ -4,7 +4,7 @@ import store from './store'
 // import router from './router'
 import vuetify from './plugins/vuetify'
 import VueMeta from 'vue-meta'
-import router from 'vue-router'
+import router from './router'
 
 Vue.config.productionTip = false
 Vue.use(VueMeta, {
@@ -12,8 +12,8 @@ Vue.use(VueMeta, {
   refreshOnceOnNavigation: true
 })
 new Vue({
-  router,
   store,
   vuetify,
+  router,
   render: h => h(App)
 }).$mount('#app')
